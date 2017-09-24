@@ -1,10 +1,11 @@
 package model.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GenericDAO<T> {
 	public List<T> getAll();
-	public T getForId(int id);
+	public Optional<T> getForId(int id);
 	public boolean insert(T item);
-	public boolean update(T item);
+	public int update(T item);
 }	

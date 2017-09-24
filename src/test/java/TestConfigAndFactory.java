@@ -1,6 +1,6 @@
 import controller.Config;
 import model.dao.FactoryDAO;
-import model.impl.mysql.MySQLCategoryDAO;
+import model.dao.impl.mysql.MySQLCategoryDAO;
 import org.junit.Assert;
 import org.junit.Test;
 

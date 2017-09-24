@@ -1,20 +1,36 @@
 package model.entities;
 
+import model.dao.CategoryDAO;
+import model.dao.FactoryDAO;
+
 public class Meal {
 	private int id;
 	private String name;
 	private int price;
 	private int weight;
 	private MealCategory category;
+	private String image;
+	private int minutes;
 	
-	public Meal(int id, String name, int price, int weight, MealCategory category) {
+	public Meal(int id, String name, int price, int weight, int category, String image, int minutes) {
 		this.id = id;
 		this.name = name;
 		this.price = price;
 		this.weight = weight;
-		this.category = category;
+		CategoryDAO dao = FactoryDAO.getInstance().getCategoryDAO();
+		this.category = dao.getForId(category).get();
+		this.image = image;
+		this.minutes = minutes;
 	}
-	
+
+	public int getMinutes() {
+		return minutes;
+	}
+
+	public void setMinutes(int minutes) {
+		this.minutes = minutes;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -54,5 +70,13 @@ public class Meal {
 	public void setCategory(MealCategory category) {
 		this.category = category;
 	}
-	
+
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
 }

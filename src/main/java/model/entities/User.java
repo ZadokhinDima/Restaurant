@@ -1,11 +1,12 @@
 package model.entities;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 public class User {
 	private int id;
 	private String name;
-	private LocalDate birthDate;
+	private Date birthDate;
 	private Role role;
 	
 	public int getId() {
@@ -24,11 +25,11 @@ public class User {
 		this.name = name;
 	}
 	
-	public LocalDate getBirthDate() {
+	public Date getBirthDate() {
 		return birthDate;
 	}
 	
-	public void setBirthDate(LocalDate birthDate) {
+	public void setBirthDate(Date birthDate) {
 		this.birthDate = birthDate;
 	}
 
@@ -36,17 +37,11 @@ public class User {
 		return role;
 	}
 	
-	public User(int id, String name, LocalDate birthDate, Role role) {
+	public User(int id, String name, Date birthDate, String role) {
 		this.id = id;
 		this.name = name;
 		this.birthDate = birthDate;
-		this.role = role;
+		this.role = Role.valueOf(role.toUpperCase());
 	}
 
-	public void setRole(Role role) {
-		this.role = role;
-	}
-	
-	
-	
 }	

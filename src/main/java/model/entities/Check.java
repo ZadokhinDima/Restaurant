@@ -1,13 +1,20 @@
 package model.entities;
 
-import java.time.LocalDateTime;
+import model.dao.FactoryDAO;
+import model.dao.OrderDAO;
+import model.dao.UserDAO;
+
+import java.sql.Timestamp;
+
 
 public class Check {
 	
 	private int id;
 	private Order order;
+	private int orderId;
+	private int adminId;
 	private int price;
-	private LocalDateTime paid;
+	private Timestamp paid;
 	private User admin;
 	public int getId() {
 		return id;
@@ -15,37 +22,46 @@ public class Check {
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public Order getOrder() {
-		return order;
+        if (order == null) {
+            OrderDAO dao = FactoryDAO.getInstance().getOrderDAO();
+            order = dao.getForId(orderId).get();
+        }
+        return order;
 	}
-	public void setOrder(Order order) {
-		this.order = order;
-	}
+
 	public int getPrice() {
 		return price;
 	}
-	public void setPrice(int price) {
-		this.price = price;
-	}
-	public LocalDateTime getPaid() {
+
+	public Timestamp getPaid() {
 		return paid;
 	}
-	public void setPaid(LocalDateTime paid) {
-		this.paid = paid;
+
+	public void pay() {
+		paid = new Timestamp(System.currentTimeMillis());
 	}
+
 	public User getAdmin() {
-		return admin;
-	}
+        if (admin == null) {
+            UserDAO dao = FactoryDAO.getInstance().getUserDAO();
+            admin = dao.getForId(adminId).get();
+        }
+        return admin;
+    }
+
 	public void setAdmin(User admin) {
 		this.admin = admin;
+		adminId = admin.getId();
 	}
-	public Check(int id, Order order, int price, LocalDateTime paid, User admin) {
-		super();
+
+	public Check(int id, int orderId, int price, Timestamp paid, int adminId) {
 		this.id = id;
-		this.order = order;
+		this.orderId = orderId;
 		this.price = price;
 		this.paid = paid;
-		this.admin = admin;
+		this.adminId = adminId;
 	}
 	
 	
