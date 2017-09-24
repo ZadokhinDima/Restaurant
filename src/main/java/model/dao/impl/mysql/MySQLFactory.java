@@ -1,10 +1,8 @@
-package model.impl.mysql;
+package model.dao.impl.mysql;
 
 import model.dao.*;
 
 public class MySQLFactory extends FactoryDAO{
-
-	//TODO: Create connection pool and use it as parameter in DAOs.
 	
 	@Override
 	public UserDAO getUserDAO() {
