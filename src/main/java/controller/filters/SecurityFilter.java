@@ -24,15 +24,30 @@ public class SecurityFilter implements Filter {
         // general queries
         generalQueries.add("login");
         generalQueries.add("registration");
-        generalQueries.add("register");
+        generalQueries.add("register.user");
         generalQueries.add("index");
+        generalQueries.add("set.locale");
 
         // subscriber queries
         clientQueries.addAll(generalQueries);
+        clientQueries.add("get.order.items");
+        clientQueries.add("client.home.page");
+        clientQueries.add("search.meals");
+        clientQueries.add("add.meal.to.order");
+        clientQueries.add("remove.meal.from.order");
+        clientQueries.add("create.order");
+        clientQueries.add("client.current.order");
+        clientQueries.add("exit");
+        clientQueries.add("client.checks.page");
+        clientQueries.add("client.decline.order");
+        clientQueries.add("pay.check");
 
 
         // admin queries
         adminQueries.addAll(generalQueries);
+        adminQueries.add("get.order.items");
+        adminQueries.add("exit");
+
 
     }
 
@@ -44,7 +59,7 @@ public class SecurityFilter implements Filter {
 
 
         String query = request.getParameter("query");
-        if(query == null ){
+        if (query == null) {
             query = "index";
         }
 

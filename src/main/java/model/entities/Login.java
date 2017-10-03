@@ -1,16 +1,22 @@
 package model.entities;
 
+
 public class Login {
 	private int id;
 	private String name;
 	private String password;
-	
-	public Login(int id, String name, String password) {
+
+
+    public Login(int id, String name, String password) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.password = password;
 	}
+
+	public Login(){
+
+    }
 
 	public int getId() {
 		return id;

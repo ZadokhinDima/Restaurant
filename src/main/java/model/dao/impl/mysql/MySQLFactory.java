@@ -2,36 +2,44 @@ package model.dao.impl.mysql;
 
 import model.dao.*;
 
+import java.sql.Connection;
+
 public class MySQLFactory extends FactoryDAO{
-	
-	@Override
+
+	Connection connection;
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
+    @Override
 	public UserDAO getUserDAO() {
-		return new MySQLUserDAO();
+		return new MySQLUserDAO(connection);
 	}
 
 	@Override
 	public OrderDAO getOrderDAO() {
-		return new MySQLOrderDAO();
+		return new MySQLOrderDAO(connection);
 	}
 
 	@Override
 	public MealsDAO getMealsDAO() {
-		return new MySQLMealsDAO();
+		return new MySQLMealsDAO(connection);
 	}
 
 	@Override
 	public LoginDAO getLoginDAO() {
-		return new MySQLLoginDAO();
+		return new MySQLLoginDAO(connection);
 	}
 
 	@Override
 	public CheckDAO getCheckDAO() {
-		return new MySQLCheckDAO();
+		return new MySQLCheckDAO(connection);
 	}
 
 	@Override
 	public CategoryDAO getCategoryDAO() {
-		return  new MySQLCategoryDAO();
+		return  new MySQLCategoryDAO(connection);
 	}
 	
 }

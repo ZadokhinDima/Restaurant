@@ -2,6 +2,7 @@ package model.dao;
 
 import controller.Config;
 
+
 public abstract class FactoryDAO {
 	public abstract UserDAO getUserDAO();
 	public abstract OrderDAO getOrderDAO();

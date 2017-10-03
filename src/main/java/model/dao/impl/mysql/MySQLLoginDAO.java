@@ -2,38 +2,72 @@ package model.dao.impl.mysql;
 
 import model.dao.LoginDAO;
 import model.entities.Login;
+import model.entities.LoginBuilder;
+import org.apache.log4j.Logger;
 
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class MySQLLoginDAO implements LoginDAO{
 
-    private final String TABLE_NAME = "login";
-    private final String ID_COLUMN = "id";
-    private final String EMAIL_COLUMN = "email";
-    private final String PASSWORD_COLUMN = "birth_date";
-    private final String INSERT_QUERY = "INSERT INTO login (email, password) VALUES (?, ?)";
-    private final String UPDATE_QUERY = "UPDATE  login SET email = ?, password = ? WHERE id = ?";
+    private Connection connection;
 
-    DbUtil<Login> util = new DbUtil<>(this::parseLogin,TABLE_NAME);
 
-	@Override
+    private static final String ID_COLUMN = "id";
+    private static final String EMAIL_COLUMN = "email";
+    private static final String PASSWORD_COLUMN = "password";
+    private static final String SELECT_ALL_QUERY = "SELECT * FROM login";
+    private static final String SELECT_FOR_ID_QUERY = "SELECT * FROM login WHERE id = ?";
+    private static final String INSERT_QUERY = "INSERT INTO login (email, password) VALUES (?, ?)";
+    private static final String UPDATE_QUERY = "UPDATE  login SET email = ?, password = ? WHERE id = ?";
+    private static final String LOGIN_QUERY = "SELECT * FROM login WHERE email = ? AND  password = ?";
+    private static final Logger LOGGER = Logger.getLogger(MySQLLoginDAO.class);
+
+
+
+    public MySQLLoginDAO(Connection connection) {
+        this.connection = connection;
+    }
+
+    @Override
 	public List<Login> getAll() {
-        return util.getAll();
+        try {
+            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY);
+            ResultSet resultSet = statement.executeQuery();
+            return parseLoginList(resultSet);
+        }
+        catch (SQLException e){
+            LOGGER.error(e);
+            throw new RuntimeException(e);
+        }
 	}
 
 	@Override
 	public Optional<Login> getForId(int id) {
-        return util.getForId(id);
+        try {
+            PreparedStatement statement = connection.prepareStatement(SELECT_FOR_ID_QUERY);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return Optional.of(parseLogin(resultSet));
+            }
+            else {
+                return Optional.empty();
+            }
+        }
+        catch (SQLException e){
+            LOGGER.error(e);
+            throw new RuntimeException(e);
+        }
 	}
 
 	 
 
 	@Override
 	public boolean insert(Login item) {
-        Connection connection = DbManager.getConnection();
         try{
             PreparedStatement statement = connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, item.getName());
@@ -47,16 +81,13 @@ public class MySQLLoginDAO implements LoginDAO{
             else return false;
         }
         catch (SQLException e){
-            throw  new RuntimeException(e);
-        }
-        finally {
-            DbManager.putConnection(connection);
+            LOGGER.error(e);
+            throw new RuntimeException(e);
         }
 	}
 
 	@Override
 	public int update(Login item) {
-        Connection connection = DbManager.getConnection();
         try{
             PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY);
             statement.setString(1, item.getName());
@@ -65,19 +96,53 @@ public class MySQLLoginDAO implements LoginDAO{
             return statement.executeUpdate();
         }
         catch (SQLException e){
+            LOGGER.error(e);
             throw  new RuntimeException(e);
-        }
-        finally {
-            DbManager.putConnection(connection);
         }
 	}
 
-	private Login parseLogin(ResultSet resultSet){
+    @Override
+    public Optional<Login> findAccount(String email, String password) {
         try{
-            return new Login(resultSet.getInt(ID_COLUMN), resultSet.getString(EMAIL_COLUMN),
-                    resultSet.getString(PASSWORD_COLUMN));
+            PreparedStatement statement = connection.prepareStatement(LOGIN_QUERY);
+            statement.setString(1, email);
+            statement.setString(2, password);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                return Optional.of(parseLogin(resultSet));
+            }
+            else return Optional.empty();
+        }
+        catch(SQLException e){
+            LOGGER.error(e);
+            throw  new RuntimeException(e);
+        }
+    }
+
+    private Login parseLogin(ResultSet resultSet){
+        try{
+            return new LoginBuilder()
+                    .setId(resultSet.getInt(ID_COLUMN))
+                    .setName(resultSet.getString(EMAIL_COLUMN))
+                    .setPassword(resultSet.getString(PASSWORD_COLUMN))
+                    .createLogin();
         }
         catch (SQLException e){
+            LOGGER.error(e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<Login> parseLoginList(ResultSet resultSet){
+        try {
+            List<Login> result = new ArrayList<>();
+            while (resultSet.next()){
+                result.add(parseLogin(resultSet));
+            }
+            return result;
+        }
+        catch (SQLException e){
+            LOGGER.error(e);
             throw new RuntimeException(e);
         }
     }

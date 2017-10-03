@@ -14,7 +14,7 @@ import java.io.IOException;
 @WebServlet(name = "main", value = "/main")
 public class MainController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        processQuery(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

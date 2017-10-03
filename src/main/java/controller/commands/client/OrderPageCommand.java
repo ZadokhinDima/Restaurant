@@ -1,13 +1,13 @@
-package controller.commands.outer;
+package controller.commands.client;
 
 import controller.commands.Command;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class ErrorCommand implements Command {
+public class OrderPageCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        return ERROR_JSP;
+        return CLIENT_ORDER_PAGE;
     }
 }

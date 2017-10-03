@@ -1,6 +1,5 @@
 package model.entities;
 
-import model.dao.FactoryDAO;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -9,8 +8,10 @@ public class Order {
 	private int id;
 	private List<Meal> meals;
 	private User client;
+	private int clientId;
 	private Timestamp ordered;
-	private Timestamp done;
+	private int accepted;
+
 
 	public int getId() {
 		return id;
@@ -34,30 +35,36 @@ public class Order {
 
 	public void setClient(User client) {
 		this.client = client;
+		this.clientId = client.getId();
 	}
 
 	public Timestamp getOrdered() {
 		return ordered;
 	}
 
-	public void make() {
-		this.ordered = new Timestamp(System.currentTimeMillis());
-	}
+    public void setOrdered(Timestamp ordered) {
+        this.ordered = ordered;
+    }
 
-	public Timestamp getDone() {
-		return done;
-	}
+    public int getAccepted() {
+        return accepted;
+    }
 
-	public void setDone(Timestamp done) {
-		this.done = done;
-	}
+    public void setAccepted(int accepted) {
+        this.accepted = accepted;
+    }
 
-	public Order(int id, int client, Timestamp ordered, Timestamp done) {
+    public Order(int id, User client, Timestamp ordered, int accepted, List<Meal> meals, int clientId) {
 		this.id = id;
-		this.client = FactoryDAO.getInstance().getUserDAO().getForId(client).get();
+		this.client = client;
 		this.ordered = ordered;
-		this.done = done;
+		this.accepted = accepted;
+		this.meals = meals;
+		this.clientId = clientId;
 	}
-	
-	
+
+
+	public int getClientId() {
+		return clientId;
+	}
 }
