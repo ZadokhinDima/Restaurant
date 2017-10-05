@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>6188d229-fab0-4798-95bc-f885a00b1340</OriginalElement>
+  <nodes>
+    <node x="328.5" y="585.0">6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.checks</node>
+    <node x="5.0" y="195.0">6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.menu_category</node>
+    <node x="210.0" y="376.5">6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.orders</node>
+    <node x="285.625" y="0.0">6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.login</node>
+    <node x="63.375" y="612.0">6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.meals_in_order</node>
+    <node x="0.0" y="363.0">6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.meals</node>
+    <node x="270.625" y="168.0">6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.users</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.meals_in_order" target="6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.meals">
+      <point x="-57.25" y="-59.0" />
+      <point x="120.625" y="560.0" />
+      <point x="95.0" y="560.0" />
+      <point x="0.0" y="86.0" />
+    </edge>
+    <edge source="6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.meals" target="6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.menu_category">
+      <point x="0.0" y="-86.0" />
+      <point x="0.0" y="45.5" />
+    </edge>
+    <edge source="6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.checks" target="6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.users">
+      <point x="43.25" y="-86.0" />
+      <point x="458.25" y="560.0" />
+      <point x="445.625" y="560.0" />
+      <point x="445.625" y="338.0" />
+      <point x="449.125" y="338.0" />
+      <point x="59.5" y="72.5" />
+    </edge>
+    <edge source="6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.checks" target="6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.orders">
+      <point x="-43.25" y="-86.0" />
+      <point x="371.75" y="560.0" />
+      <point x="362.25" y="560.0" />
+      <point x="50.75" y="72.5" />
+    </edge>
+    <edge source="6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.orders" target="6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.users">
+      <point x="0.0" y="-72.5" />
+      <point x="311.5" y="338.0" />
+      <point x="330.125" y="338.0" />
+      <point x="-59.5" y="72.5" />
+    </edge>
+    <edge source="6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.meals_in_order" target="6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.orders">
+      <point x="57.25" y="-59.0" />
+      <point x="235.125" y="560.0" />
+      <point x="260.75" y="560.0" />
+      <point x="-50.75" y="72.5" />
+    </edge>
+    <edge source="6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.users" target="6188d229-fab0-4798-95bc-f885a00b1340.TABLE:restaurant.login">
+      <point x="0.0" y="-72.5" />
+      <point x="0.0" y="59.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="255.0" y="398.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Key columns</Category>
+    <Category>Columns</Category>
+  </Categories>
+</Diagram>
+
