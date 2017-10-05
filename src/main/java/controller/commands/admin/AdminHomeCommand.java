@@ -4,7 +4,6 @@ import controller.commands.Command;
 import model.entities.Order;
 import model.service.OrderService;
 import model.service.impl.OrderServiceImpl;
-import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

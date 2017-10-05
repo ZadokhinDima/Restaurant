@@ -15,7 +15,7 @@ import java.util.List;
 public class ClientHomeCommand implements Command {
 
     private static final String ATTRIBUTE_CLIENT_ORDERS = "ordersHistory";
-    private static final String ATTRIBUTE_USER = "ordersHistory";
+    private static final String ATTRIBUTE_USER = "user";
 
     private OrderService service = new OrderServiceImpl();
 

@@ -1,8 +1,6 @@
 package controller.commands.client;
 
 import controller.commands.Command;
-import model.entities.User;
-import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
