@@ -1,5 +1,6 @@
 package model.service.impl;
 
+import com.mysql.cj.mysqla.authentication.MysqlaAuthenticationProvider;
 import model.dao.CategoryDAO;
 import model.dao.FactoryDAO;
 import model.dao.MealsDAO;
@@ -31,7 +32,10 @@ public class MenuServiceImpl implements MenuService {
 
     public void addMealToList(int mealId, int amount, List<Meal> meals) {
         Meal toAdd = getMealWithAmount(mealId, amount);
-
+        Connection connection = DbManager.getConnection();
+        MySQLFactory factory = (MySQLFactory)FactoryDAO.getInstance();
+        factory.setConnection(connection);
+        CategoryDAO categoryDAO = factory.getCategoryDAO();
         if (meals.contains(toAdd)) {
             for (Meal meal : meals) {
                 if (meal.equals(toAdd)) {
@@ -39,9 +43,10 @@ public class MenuServiceImpl implements MenuService {
                 }
             }
         } else {
+            toAdd.setCategory(categoryDAO.getForId(toAdd.getCategoryId()).get());
             meals.add(toAdd);
         }
-
+        DbManager.putConnection(connection);
     }
 
     public void removeMealFromList(int mealId, int amount, List<Meal> meals) {

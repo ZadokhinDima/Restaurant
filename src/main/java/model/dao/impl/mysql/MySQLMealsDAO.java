@@ -149,6 +149,7 @@ public class MySQLMealsDAO implements MealsDAO{
                             setName(resultSet.getString(NAME_COLUMN)).
                             setPrice(resultSet.getInt(PRICE_COLUMN)).
                             setWeight(resultSet.getInt(WEIGHT_COLUMN)).
+                            setCategoryId(resultSet.getInt(CATEGORY_COLUMN)).
                             createMeal();
         }
         catch (SQLException e){

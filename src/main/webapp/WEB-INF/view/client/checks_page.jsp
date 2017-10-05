@@ -8,7 +8,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Checks</title>
+    <title><fmt:message key="client.header.checks" bundle="${rb}"/></title>
     <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -30,7 +30,8 @@
     <div class="information-box">
         <h1><fmt:message key="check.order" bundle="${rb}"/> ${check.order.ordered}</h1>
         <p><fmt:message key="check.price" bundle="${rb}"/> <ctg:price price="${check.price}"/></p>
-        <form action="/main" method="post">
+        <p><fmt:message key="check.admin" bundle="${rb}"/> ${check.admin.name} </p>
+        <form action="/main" method="post" class="button-forms">
             <input type="hidden" name="order.id" value="${check.order.id}">
             <input type="hidden" name="query" value="get.order.items">
             <button class="button-green">
@@ -38,7 +39,7 @@
             </button>
         </form>
         <c:if test="${empty check.paid}">
-            <form action="/main" method="post">
+            <form action="/main" method="post" class="button-forms">
                 <input type="hidden" name="query" value="pay.check">
                 <input hidden name="check.id" value="${check.id}">
                 <button class="button-green">

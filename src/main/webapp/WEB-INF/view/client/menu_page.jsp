@@ -7,7 +7,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Menu</title>
+    <title><fmt:message key="client.header.menu" bundle="${rb}"/></title>
     <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -28,7 +28,7 @@
             <fmt:message key="menu.select.category" bundle="${rb}"/>
             <select name="category" >
                 <option value="" disabled selected>${sessionScope.currentCategory.name}</option>
-                <c:forEach items="${sessionScope.categories}" var="category">
+                <c:forEach items="${requestScope.categories}" var="category">
                     <option value="${category.id}"> ${category.name} </option>
                 </c:forEach>
             </select>
@@ -41,7 +41,7 @@
         <p><fmt:message key="${requestScope.message}" bundle="${rb}"/></p>
     </div>
 </c:if>
-<c:forEach items="${sessionScope.meals}" var="meal">
+<c:forEach items="${requestScope.meals}" var="meal">
     <div class="information-box">
         <form action="/main" method="post">
             <input type="hidden" name="query" value="add.meal.to.order">

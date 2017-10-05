@@ -18,11 +18,22 @@ public class Check {
 	public Check(int id, Order order, int price, Timestamp paid, User admin, int orderId, int adminId) {
 		this.id = id;
 		this.order = order;
+		if(order != null){
+			this.orderId = order.getId();
+		}
+		else {
+			this.orderId = orderId;
+		}
 		this.price = price;
 		this.paid = paid;
 		this.admin = admin;
-		this.adminId = adminId;
-		this.orderId = orderId;
+		if(admin != null){
+			this.adminId = admin.getId();
+		}
+		else {
+			this.adminId = adminId;
+		}
+
 	}
 
 	public int getId() {
@@ -68,5 +79,18 @@ public class Check {
 
 	public int getOrderId() {
 		return orderId;
+	}
+
+	@Override
+	public String toString() {
+		return "Check{" +
+				"id=" + id +
+				", order=" + order +
+				", price=" + price +
+				", paid=" + paid +
+				", admin=" + admin +
+				", orderId=" + orderId +
+				", adminId=" + adminId +
+				'}';
 	}
 }

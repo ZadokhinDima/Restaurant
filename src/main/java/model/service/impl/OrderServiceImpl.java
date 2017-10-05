@@ -1,19 +1,21 @@
 package model.service.impl;
 
+
 import model.dao.*;
 import model.dao.impl.mysql.DbManager;
 import model.dao.impl.mysql.MySQLFactory;
 import model.entities.*;
 import model.service.OrderService;
-import model.exeptions.ConcurrentProcessingException;
+
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
-import java.sql.SQLException;
+
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class OrderServiceImpl implements OrderService{
 
@@ -58,7 +60,7 @@ public class OrderServiceImpl implements OrderService{
         }
     }
 
-    public boolean createOrder(User client, List<Meal> meals){
+    public int createOrder(User client, List<Meal> meals){
         Order toCreate =  new OrderBuilder().setClient(client)
                 .setOrdered(new Timestamp(new Date().getTime()))
                 .setMeals(meals)
@@ -68,10 +70,9 @@ public class OrderServiceImpl implements OrderService{
         Connection connection = DbManager.getConnection();
         factory.setConnection(connection);
         OrderDAO dao = factory.getOrderDAO();
-
-        boolean inserted = dao.insert(toCreate);
+        dao.insert(toCreate);
         DbManager.putConnection(connection);
-        return inserted;
+        return toCreate.getId();
     }
 
     @Override
@@ -95,5 +96,35 @@ public class OrderServiceImpl implements OrderService{
         Order order = orderDAO.getForId(orderId).get();
         DbManager.putConnection(connection);
         return order.getClientId() == client.getId();
+    }
+
+    @Override
+    public Order getFullInfoAboutOrder(int orderId) {
+        Connection connection = DbManager.getConnection();
+        MySQLFactory factory = (MySQLFactory) FactoryDAO.getInstance();
+        factory.setConnection(connection);
+        OrderDAO orderDAO = factory.getOrderDAO();
+        Order result = orderDAO.getForId(orderId).get();
+        UserDAO userDAO = factory.getUserDAO();
+        User client = userDAO.getForId(result.getClientId()).get();
+        result.setClient(client);
+        result.setMeals(getOrderMeals(result.getId()));
+        DbManager.putConnection(connection);
+        return result;
+    }
+
+    @Override
+    public List<Order> getActiveOrders() {
+        Connection connection = DbManager.getConnection();
+        MySQLFactory factory = (MySQLFactory) FactoryDAO.getInstance();
+        factory.setConnection(connection);
+        OrderDAO orderDAO = factory.getOrderDAO();
+
+        List<Order> result = orderDAO.getAll().stream()
+                .filter(order -> order.getAccepted()==0)
+                .collect(Collectors.toList());
+
+        DbManager.putConnection(connection);
+        return result;
     }
 }

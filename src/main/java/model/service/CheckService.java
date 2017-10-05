@@ -1,6 +1,7 @@
 package model.service;
 
 import model.entities.Check;
+import model.entities.Order;
 import model.entities.User;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface CheckService {
 
     void payCheck(int check);
 
-    Check acceptOrder(int orderId, User admin);
+    Check acceptOrder(Order order, User admin);
 
     void declineOrder(int orderId);
 }

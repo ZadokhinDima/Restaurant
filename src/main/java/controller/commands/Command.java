@@ -15,6 +15,8 @@ public interface Command {
     String CLIENT_ORDER_PAGE = "/WEB-INF/view/client/order_page.jsp";
     String CLIENT_CHECKS_PAGE = "/WEB-INF/view/client/checks_page.jsp";
 
+    String ADMIN_ORDER_PAGE = "/WEB-INF/view/admin/order_page.jsp";
+
 
     String execute(HttpServletRequest request, HttpServletResponse response);
 }

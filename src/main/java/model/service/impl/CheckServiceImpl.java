@@ -3,6 +3,7 @@ package model.service.impl;
 import model.dao.CheckDAO;
 import model.dao.FactoryDAO;
 import model.dao.OrderDAO;
+import model.dao.UserDAO;
 import model.dao.impl.mysql.DbManager;
 import model.dao.impl.mysql.MySQLFactory;
 import model.entities.*;
@@ -26,12 +27,13 @@ public class CheckServiceImpl implements CheckService{
         factory.setConnection(connection);
         CheckDAO checkDAO = factory.getCheckDAO();
         List<Check> result = checkDAO.getAllChecksForUser(client);
-        loadOrdersIntoChecs(result, factory);
+        loadOrdersIntoChecks(result, factory);
+        loadAdminsIntoChecks(result, factory);
         DbManager.putConnection(connection);
         return result;
     }
 
-    private void loadOrdersIntoChecs(List<Check> checks, FactoryDAO factoryDAO){
+    private void loadOrdersIntoChecks(List<Check> checks, FactoryDAO factoryDAO){
         OrderDAO orderDAO = factoryDAO.getOrderDAO();
         for(Check check : checks){
             if(check.getOrder() == null){
@@ -40,6 +42,14 @@ public class CheckServiceImpl implements CheckService{
         }
     }
 
+    private void loadAdminsIntoChecks(List<Check> checks, FactoryDAO factoryDAO){
+        UserDAO userDAO = factoryDAO.getUserDAO();
+        for(Check check : checks){
+            if(check.getAdmin() == null){
+                check.setAdmin(userDAO.getForId(check.getAdminId()).get());
+            }
+        }
+    }
     @Override
     public void payCheck(int checkId){
         try(Connection connection = DbManager.getConnection()){
@@ -65,13 +75,13 @@ public class CheckServiceImpl implements CheckService{
 
 
     @Override
-    public Check acceptOrder(int orderId, User admin){
+    public Check acceptOrder(Order order, User admin){
         try(Connection connection = DbManager.getConnection()) {
             connection.setAutoCommit(false);
             MySQLFactory factory = (MySQLFactory) FactoryDAO.getInstance();
             factory.setConnection(connection);
             OrderDAO orderDAO = factory.getOrderDAO();
-            Order order = orderDAO.getForId(orderId).get();
+            order = orderDAO.getForId(order.getId()).get();
             if(order.getAccepted() == 0) {
                 order.setAccepted(1);
             }

@@ -7,7 +7,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Your order</title>
+    <title><fmt:message key="client.header.order" bundle="${rb}"/></title>
     <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>

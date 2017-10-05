@@ -5,6 +5,7 @@ import model.entities.Meal;
 import model.entities.User;
 import model.service.OrderService;
 import model.service.impl.OrderServiceImpl;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,20 +19,29 @@ public class CreateOrderCommand implements Command {
 
     private User client;
     private List<Meal> meals;
+    private int orderId;
 
     private OrderService service = new OrderServiceImpl();
+
+    private static final Logger LOGGER = Logger.getLogger(CreateOrderCommand.class);
+
 
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         initCommand(request);
-        service.createOrder(client, meals);
-        request.getSession().setAttribute(ATTRIBUTE_CURRENT_ORDER_MEALS, null);
+        orderId = service.createOrder(client, meals);
+        saveCommandResults(request);
         return new ClientHomeCommand().execute(request, response);
     }
 
     private void initCommand(HttpServletRequest request){
         client = (User) request.getSession().getAttribute(ATTRIBUTE_USER);
         meals = (List<Meal>) request.getSession().getAttribute(ATTRIBUTE_CURRENT_ORDER_MEALS);
+    }
+
+    private void saveCommandResults(HttpServletRequest request){
+        request.getSession().setAttribute(ATTRIBUTE_CURRENT_ORDER_MEALS, null);
+        LOGGER.info("Client: " + client.getId() + " created order: " + orderId);
     }
 }

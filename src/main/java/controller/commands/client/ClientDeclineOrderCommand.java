@@ -31,6 +31,7 @@ public class ClientDeclineOrderCommand implements Command {
         if(orderService.checkClientRightsOnOrder(orderId, client)){
             try {
                 checksService.declineOrder(orderId);
+                LOGGER.info("Client id: " + client.getId() + " declined order: " + orderId);
                 return new ClientHomeCommand().execute(request, response);
             }
             catch (ConcurrentProcessingException e){

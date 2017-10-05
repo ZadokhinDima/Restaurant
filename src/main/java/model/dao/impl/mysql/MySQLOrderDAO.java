@@ -22,7 +22,7 @@ public class MySQLOrderDAO implements OrderDAO {
     private static final String TIME_ORDER_COLUMN = "orders.order_time";
     private static final String ACCEPTED_COLUMN = "orders.accepted";
 
-    private static final String SELECT_ALL_QUERY = "SELECT * FROM orders";
+    private static final String SELECT_ALL_QUERY = "SELECT * FROM orders ORDER BY order_time";
     private static final String SELECT_FOR_ID_QUERY = "SELECT * FROM orders WHERE orders.id = ? ";
     private static final String INSERT_QUERY = "INSERT INTO orders (id_client, order_time, accepted) VALUES (?, ?, ?)";
     private static final String UPDATE_QUERY = "UPDATE  orders SET id_client = ?, order_time = ?, accepted = ? WHERE id = ?";

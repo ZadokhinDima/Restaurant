@@ -121,14 +121,15 @@
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 
+
 .information-box table td{
     padding: 10px;
     border-style: solid;
     border-spacing: 20px;
     text-align: center;
 }
-.information-box form{
-    float: left;
+.button-forms{
+    display: inline-block;
 }
 
 .styled-select {
@@ -148,7 +149,6 @@
 
 
 .button-red {
-    width: 150px;
     color: #fff; /* цвет текста */
     text-decoration: none; /* убирать подчёркивание у ссылок */
     user-select: none; /* убирать выделение текста */
@@ -160,7 +160,6 @@
 .button-red:active { background: rgb(152,15,0); } /* при нажатии */
 
 .button-green {
-    width: 150px;
     color: #fff; /* цвет текста */
     text-decoration: none; /* убирать подчёркивание у ссылок */
     user-select: none; /* убирать выделение текста */

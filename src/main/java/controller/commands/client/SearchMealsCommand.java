@@ -6,6 +6,7 @@ import model.dao.FactoryDAO;
 import model.entities.MealCategory;
 import model.service.MenuService;
 import model.service.impl.MenuServiceImpl;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,13 +23,10 @@ public class SearchMealsCommand implements Command {
 
     private int category;
 
-
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         initCommand(request);
-        request.getSession().setAttribute(ATTRIBUTE_MEALS, service.getMealsForCategory(category));
-        request.getSession().setAttribute(ATTRIBUTE_CATEGORIES, service.getAllCategories());
-        request.getSession().setAttribute(ATTRIBUTE_CURRENT, service.getForId(category));
+        saveCommandResults(request);
         return CLIENT_MENU_PAGE;
     }
 
@@ -42,5 +40,11 @@ public class SearchMealsCommand implements Command {
             return;
         }
         category = 1;
+    }
+
+    private void saveCommandResults(HttpServletRequest request){
+        request.setAttribute(ATTRIBUTE_MEALS, service.getMealsForCategory(category));
+        request.setAttribute(ATTRIBUTE_CATEGORIES, service.getAllCategories());
+        request.getSession().setAttribute(ATTRIBUTE_CURRENT, service.getForId(category));
     }
 }

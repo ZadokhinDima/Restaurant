@@ -7,7 +7,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Home</title>
+    <title><fmt:message key="client.header.home" bundle="${rb}"/></title>
     <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -77,7 +77,7 @@
                 </c:when>
             </c:choose>
             <br>
-            <form action="/main" method="post">
+            <form action="/main" method="post" class="button-forms">
                 <input type="hidden" name="order.id" value="${order.id}">
                 <input type="hidden" name="query" value="get.order.items">
                 <button class="button-green">
@@ -85,7 +85,7 @@
                 </button>
             </form>
             <c:if test="${order.accepted == 0}">
-                <form action="/main" method="post">
+                <form action="/main" method="post" class="button-forms">
                     <input type="hidden" name="query" value="client.decline.order">
                     <input hidden name="order.id" value="${order.id}">
                     <button class="button-red">

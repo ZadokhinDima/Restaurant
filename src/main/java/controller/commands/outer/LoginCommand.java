@@ -1,6 +1,7 @@
 package controller.commands.outer;
 
 import controller.commands.Command;
+import controller.commands.admin.AdminHomeCommand;
 import controller.commands.client.ClientHomeCommand;
 import controller.util.BundleUtil;
 import controller.util.PasswordSecurityUtil;
@@ -40,7 +41,7 @@ public class LoginCommand implements Command {
             LOGGER.info("User " + user.get().getId() + " logged in.");
             request.getSession().setAttribute(USER_ATTRIBUTE, user.get());
             if(user.get().getRole().equals(Role.ADMIN)){
-                return ADMIN_PAGE_JSP;
+                return new AdminHomeCommand().execute(request, response);
             }
             else{
                 return new ClientHomeCommand().execute(request, response);

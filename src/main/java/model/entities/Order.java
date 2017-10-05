@@ -67,4 +67,16 @@ public class Order {
 	public int getClientId() {
 		return clientId;
 	}
+
+	@Override
+	public String toString() {
+		return "Order{" +
+				"id=" + id +
+				", meals=" + meals +
+				", client=" + client +
+				", clientId=" + clientId +
+				", ordered=" + ordered +
+				", accepted=" + accepted +
+				'}';
+	}
 }

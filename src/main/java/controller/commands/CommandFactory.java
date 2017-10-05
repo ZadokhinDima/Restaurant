@@ -1,5 +1,9 @@
 package controller.commands;
 
+import controller.commands.admin.AcceptOrderCommand;
+import controller.commands.admin.AdminDeclineOrderCommand;
+import controller.commands.admin.AdminHomeCommand;
+import controller.commands.admin.GoToOrderCommand;
 import controller.commands.client.*;
 import controller.commands.outer.*;
 import org.apache.log4j.Logger;
@@ -21,6 +25,12 @@ public class  CommandFactory {
     private static final String CLIENT_DECLINE_ORDER = "client.decline.order";
     private static final String CLIENT_CHECKS = "client.checks.page";
     private static final String PAY_CHECK = "pay.check";
+
+
+    private static final String ADMIN_HOME = "admin.home.page";
+    private static final String GO_TO_ORDER = "go.to.order";
+    private static final String ADMIN_DECLINE_ORDER = "admin.decline";
+    private static final String ADMIN_ACCEPT_ORDER = "admin.accept";
 
 
 
@@ -65,6 +75,14 @@ public class  CommandFactory {
                 return new ClientChecksCommand();
             case PAY_CHECK:
                 return new PayForCheckCommand();
+            case ADMIN_HOME:
+                return new AdminHomeCommand();
+            case GO_TO_ORDER:
+                return new GoToOrderCommand();
+            case ADMIN_ACCEPT_ORDER:
+                return new AcceptOrderCommand();
+            case ADMIN_DECLINE_ORDER:
+                return new AdminDeclineOrderCommand();
             case EXIT:
                 return new ExitCommand();
             default:

@@ -45,7 +45,10 @@ public class SecurityFilter implements Filter {
 
         // admin queries
         adminQueries.addAll(generalQueries);
-        adminQueries.add("get.order.items");
+        adminQueries.add("admin.home.page");
+        adminQueries.add("go.to.order");
+        adminQueries.add("admin.accept");
+        adminQueries.add("admin.decline");
         adminQueries.add("exit");
 
 
