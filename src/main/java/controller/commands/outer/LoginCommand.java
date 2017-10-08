@@ -1,9 +1,9 @@
 package controller.commands.outer;
 
 import controller.commands.Command;
+import controller.commands.CommandFactory;
 import controller.commands.admin.AdminHomeCommand;
 import controller.commands.client.ClientHomeCommand;
-import controller.util.BundleUtil;
 import controller.util.PasswordSecurityUtil;
 import model.entities.Role;
 import model.entities.User;
@@ -14,11 +14,13 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Locale;
 import java.util.Optional;
 
 
 public class LoginCommand implements Command {
+
+
+    private static final String EMAIL_REGEX = "[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*";
 
     private static final String EMAIL_PARAMETER = "email";
     private static final String PASSWORD_PARAMETER = "password";
@@ -26,7 +28,7 @@ public class LoginCommand implements Command {
     private static final String ERROR_ATTRIBUTE = "errorMessage";
     private static final Logger LOGGER = Logger.getLogger(LoginCommand.class);
 
-    private AccountService service = new AccountServiceImpl();
+    private AccountService service = AccountServiceImpl.getInstance();
 
     private String email;
     private String password;
@@ -36,21 +38,25 @@ public class LoginCommand implements Command {
 
         initCommand(request);
 
+        if(!validateEmail()){
+            request.setAttribute(ERROR_ATTRIBUTE, "errors.email");
+            return INDEX_JSP;
+        }
+
         Optional<User> user = service.logIn(email, password);
         if(user.isPresent()){
             LOGGER.info("User " + user.get().getId() + " logged in.");
             request.getSession().setAttribute(USER_ATTRIBUTE, user.get());
             if(user.get().getRole().equals(Role.ADMIN)){
-                return new AdminHomeCommand().execute(request, response);
+                return "redirect:client.home.page";
             }
             else{
-                return new ClientHomeCommand().execute(request, response);
+                return "redirect:admin.home.page";
             }
         }
         else{
             LOGGER.info("Invalid attempt to log in.");
-            request.setAttribute(ERROR_ATTRIBUTE,
-                    BundleUtil.getString("errors.login",(Locale)request.getSession().getAttribute("locale")));
+            request.setAttribute(ERROR_ATTRIBUTE, "errors.login");
             return INDEX_JSP;
         }
     }
@@ -59,4 +65,9 @@ public class LoginCommand implements Command {
         email = request.getParameter(EMAIL_PARAMETER);
         password = PasswordSecurityUtil.getSecurePassword(request.getParameter(PASSWORD_PARAMETER));
     }
+
+    private boolean validateEmail(){
+        return email.matches(EMAIL_REGEX);
+    }
+
 }

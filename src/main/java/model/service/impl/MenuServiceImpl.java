@@ -1,6 +1,5 @@
 package model.service.impl;
 
-import com.mysql.cj.mysqla.authentication.MysqlaAuthenticationProvider;
 import model.dao.CategoryDAO;
 import model.dao.FactoryDAO;
 import model.dao.MealsDAO;
@@ -17,6 +16,18 @@ import java.util.List;
 public class MenuServiceImpl implements MenuService {
 
     private static final Logger LOGGER = Logger.getLogger(MenuServiceImpl.class);
+
+    private MenuServiceImpl(){
+
+    }
+
+    private static class Holder{
+        private static MenuServiceImpl INSTANCE = new MenuServiceImpl();
+    }
+
+    public static MenuServiceImpl getInstance(){
+        return Holder.INSTANCE;
+    }
 
 
     public Meal getMealWithAmount(int mealId, int amount) {

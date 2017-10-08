@@ -14,7 +14,7 @@ public class GoToOrderCommand implements Command {
     private static final String PARAMETER_ORDER = "order.id";
     private static final String ATTRIBUTE_CURRENT_ORDER = "currentOrder";
 
-    private OrderService orderService = new OrderServiceImpl();
+    private OrderService orderService = OrderServiceImpl.getInstance();
 
 
     private int orderId;

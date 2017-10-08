@@ -15,7 +15,7 @@ public class AdminHomeCommand implements Command {
 
     private List<Order> activeOrders;
 
-    private OrderService orderService = new OrderServiceImpl();
+    private OrderService orderService = OrderServiceImpl.getInstance();
 
 
     @Override

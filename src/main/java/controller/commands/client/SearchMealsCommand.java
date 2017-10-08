@@ -19,7 +19,7 @@ public class SearchMealsCommand implements Command {
     private static final String ATTRIBUTE_CURRENT = "currentCategory";
     private static final String PARAMETER_CATEGORY = "category";
 
-    MenuService service = new MenuServiceImpl();
+    MenuService service = MenuServiceImpl.getInstance();
 
     private int category;
 
@@ -43,7 +43,7 @@ public class SearchMealsCommand implements Command {
     }
 
     private void saveCommandResults(HttpServletRequest request){
-        request.setAttribute(ATTRIBUTE_MEALS, service.getMealsForCategory(category));
+        request.getSession().setAttribute(ATTRIBUTE_MEALS, service.getMealsForCategory(category));
         request.setAttribute(ATTRIBUTE_CATEGORIES, service.getAllCategories());
         request.getSession().setAttribute(ATTRIBUTE_CURRENT, service.getForId(category));
     }

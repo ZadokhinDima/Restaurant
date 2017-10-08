@@ -21,6 +21,20 @@ public class OrderServiceImpl implements OrderService{
 
     private static final Logger LOGGER = Logger.getLogger(OrderServiceImpl.class);
 
+    private OrderServiceImpl(){
+
+    }
+
+    private static class Holder{
+        private static OrderServiceImpl INSTANCE = new OrderServiceImpl();
+    }
+
+    public static OrderServiceImpl getInstance(){
+        return Holder.INSTANCE;
+    }
+
+
+
     public List<Order> ordersOfUser(User user){
         Connection connection = DbManager.getConnection();
         MySQLFactory factory = (MySQLFactory) FactoryDAO.getInstance();

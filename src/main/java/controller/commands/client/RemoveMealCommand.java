@@ -24,7 +24,7 @@ public class RemoveMealCommand implements Command {
     private int mealId;
     private int amount;
     private User client;
-    private MenuService service = new MenuServiceImpl();
+    private MenuService service = MenuServiceImpl.getInstance();
 
     private static final Logger LOGGER = Logger.getLogger(RemoveMealCommand.class);
     private List<Meal> meals;

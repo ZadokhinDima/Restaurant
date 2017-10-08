@@ -32,3 +32,6 @@ hs_err_pid*
 WebProject4.iml
 /out/
 WebProject4.eml
+Dump/restaurant_checks.sql
+*.sql
+*.sql

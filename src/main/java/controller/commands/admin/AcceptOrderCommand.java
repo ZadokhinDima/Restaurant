@@ -21,7 +21,9 @@ public class AcceptOrderCommand implements Command {
     private static final String ATTRIBUTE_USER = "user";
     private static final String ATTRIBUTE_MESSAGE = "message";
 
-    private CheckService checkService = new CheckServiceImpl();
+    private static final String REDIRECT_PAGE = "redirect:admin.home.page";
+
+    private CheckService checkService = CheckServiceImpl.getInstance();
 
     private static final Logger LOGGER = Logger.getLogger(AcceptOrderCommand.class);
 
@@ -30,18 +32,26 @@ public class AcceptOrderCommand implements Command {
         initCommand(request);
         try {
             checkService.acceptOrder(order, admin);
-            LOGGER.info("Admin: " + admin.getId() + " accepted order: " + order.getId());
-            return new AdminHomeCommand().execute(request,response);
+            processSuccessfulAcceptance();
         }
         catch (ConcurrentProcessingException e){
-            request.setAttribute(ATTRIBUTE_MESSAGE, "error.concurensy.processed");
-            return new AdminHomeCommand().execute(request, response);
+            processConcurrentAcceptance(request);
         }
+        return REDIRECT_PAGE;
     }
 
     private void initCommand(HttpServletRequest request){
         order = (Order) request.getSession().getAttribute(ATTRIBUTE_CURRENT_ORDER);
         admin = (User) request.getSession().getAttribute(ATTRIBUTE_USER);
     }
+
+    private void processSuccessfulAcceptance(){
+        LOGGER.info("Admin: " + admin.getId() + " accepted order: " + order.getId());
+    }
+
+    private void processConcurrentAcceptance(HttpServletRequest request){
+        request.setAttribute(ATTRIBUTE_MESSAGE, "error.concurensy.processed");
+    }
+
 
 }

@@ -22,7 +22,7 @@ public class ClientChecksCommand implements Command {
 
     private User client;
     private List<Check> checks;
-    private CheckService service = new CheckServiceImpl();
+    private CheckService service = CheckServiceImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {

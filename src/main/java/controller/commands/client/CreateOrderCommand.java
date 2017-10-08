@@ -16,12 +16,13 @@ public class CreateOrderCommand implements Command {
     private static final String ATTRIBUTE_USER = "user";
     private static final String ATTRIBUTE_CURRENT_ORDER_MEALS = "currentOrder";
 
+    private static final String REDIRECT_PAGE = "redirect:client.home.page";
 
     private User client;
     private List<Meal> meals;
     private int orderId;
 
-    private OrderService service = new OrderServiceImpl();
+    private OrderService service = OrderServiceImpl.getInstance();
 
     private static final Logger LOGGER = Logger.getLogger(CreateOrderCommand.class);
 
@@ -32,7 +33,7 @@ public class CreateOrderCommand implements Command {
         initCommand(request);
         orderId = service.createOrder(client, meals);
         saveCommandResults(request);
-        return new ClientHomeCommand().execute(request, response);
+        return REDIRECT_PAGE;
     }
 
     private void initCommand(HttpServletRequest request){

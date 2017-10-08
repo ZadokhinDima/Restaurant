@@ -17,12 +17,14 @@ public class OrderMealsCommand implements Command {
     private final static String ATTRIBUTE_ORDER_MEALS = "orderMeals";
     private final static String ATTRIBUTE_USER = "user";
 
+    private static final String REDIRECT_PAGE = "redirect:client.home.page";
+
     private int orderId;
     private List<Meal> meals;
     private User client;
 
 
-    private OrderService service = new OrderServiceImpl();
+    private OrderService service = OrderServiceImpl.getInstance();
 
     private static final Logger LOGGER = Logger.getLogger(OrderMealsCommand.class);
 
@@ -32,7 +34,7 @@ public class OrderMealsCommand implements Command {
         initCommand(request);
         meals = service.getOrderMeals(orderId);
         saveCommandResults(request);
-        return new ClientHomeCommand().execute(request, response);
+        return REDIRECT_PAGE;
     }
 
 

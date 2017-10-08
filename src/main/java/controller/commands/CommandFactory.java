@@ -8,6 +8,9 @@ import controller.commands.client.*;
 import controller.commands.outer.*;
 import org.apache.log4j.Logger;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class  CommandFactory {
     private static final String INDEX = "index";
     private static final String REGISTRATION = "registration";
@@ -15,6 +18,8 @@ public class  CommandFactory {
     private static final String LOGIN = "login";
     private static final String SET_LOCALE = "set.locale";
     private static final String EXIT = "exit";
+
+
     private static final String MEALS_SEARCH = "search.meals";
     private static final String CLIENT_HOME = "client.home.page";
     private static final String GET_ORDER_MEALS = "get.order.items";
@@ -31,6 +36,7 @@ public class  CommandFactory {
     private static final String GO_TO_ORDER = "go.to.order";
     private static final String ADMIN_DECLINE_ORDER = "admin.decline";
     private static final String ADMIN_ACCEPT_ORDER = "admin.accept";
+
 
 
 

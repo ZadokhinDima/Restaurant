@@ -41,7 +41,7 @@
         <p><fmt:message key="${requestScope.message}" bundle="${rb}"/></p>
     </div>
 </c:if>
-<c:forEach items="${requestScope.meals}" var="meal">
+<c:forEach items="${sessionScope.meals}" var="meal">
     <div class="information-box">
         <form action="/main" method="post">
             <input type="hidden" name="query" value="add.meal.to.order">

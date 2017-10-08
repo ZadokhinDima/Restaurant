@@ -41,6 +41,24 @@ public class Login {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Login login = (Login) o;
+
+		if (id != login.id) return false;
+		if (!name.equals(login.name)) return false;
+		return password.equals(login.password);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id;
+		result = 31 * result + name.hashCode();
+		result = 31 * result + password.hashCode();
+		return result;
+	}
 }

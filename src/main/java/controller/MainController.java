@@ -25,8 +25,11 @@ public class MainController extends HttpServlet {
         String query = (String) request.getAttribute("query");
         Command command = CommandFactory.create(query);
         String page = command.execute(request, response);
-        RequestDispatcher dispatcher = request.getRequestDispatcher(page);
-        dispatcher.forward(request, response);
+        if (page.startsWith("redirect:")) {
+            response.sendRedirect(page.replace("redirect:", ""));
+        } else {
+            getServletContext().getRequestDispatcher(page).forward(request, response);
+        }
     }
 
 }

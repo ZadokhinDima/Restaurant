@@ -20,6 +20,21 @@ public class CheckServiceImpl implements CheckService{
 
     private static final Logger LOGGER = Logger.getLogger(CheckServiceImpl.class);
 
+    private CheckServiceImpl(){
+
+    }
+
+    private static class Holder {
+        private static CheckServiceImpl INSTANCE = new CheckServiceImpl();
+    }
+
+    public static CheckServiceImpl getInstance(){
+        return Holder.INSTANCE;
+    }
+
+
+
+
     @Override
     public List<Check> getChecks(User client){
         Connection connection = DbManager.getConnection();
@@ -90,7 +105,7 @@ public class CheckServiceImpl implements CheckService{
             }
             orderDAO.update(order);
 
-            OrderService service = new OrderServiceImpl();
+            OrderService service = OrderServiceImpl.getInstance();
             int price = service.getSummaryPrice(order);
 
             Check check = new CheckBuilder()

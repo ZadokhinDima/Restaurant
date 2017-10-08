@@ -3,6 +3,7 @@ package controller.commands.outer;
 import controller.commands.Command;
 import controller.util.PasswordSecurityUtil;
 import model.entities.*;
+import model.exeptions.EmailExistsException;
 import model.service.AccountService;
 import model.service.impl.AccountServiceImpl;
 import org.apache.log4j.Logger;
@@ -47,7 +48,7 @@ public class RegisterUserCommand implements Command {
 
     private static final Logger LOGGER = Logger.getLogger(RegisterUserCommand.class);
 
-    private AccountService service = new AccountServiceImpl();
+    private AccountService service = AccountServiceImpl.getInstance();
 
     private final Timestamp MIN_TIMESTAMP = Timestamp.valueOf(LocalDateTime.now().minusYears(18));
 
@@ -75,13 +76,15 @@ public class RegisterUserCommand implements Command {
 
         buildAccount();
 
-        if (service.registerUser(login, user)) {
+        try {
+            service.registerUser(login, user);
             processSuccessfulLogin();
             return CLIENT_PAGE_JSP;
-        } else {
-            processServerError();
+        } catch (EmailExistsException e) {
+            processExistingEmail();
             return REGISTRATION_JSP;
         }
+
     }
 
     private void initCommand(HttpServletRequest request) {
@@ -100,7 +103,7 @@ public class RegisterUserCommand implements Command {
         }
     }
 
-    private void buildAccount(){
+    private void buildAccount() {
         login = new LoginBuilder()
                 .setName(email)
                 .setPassword(PasswordSecurityUtil.getSecurePassword(password))
@@ -148,14 +151,14 @@ public class RegisterUserCommand implements Command {
         request.setAttribute(ERRORS, errors);
     }
 
-    private void processServerError(){
+    private void processExistingEmail() {
         LOGGER.info("Invalid attempt of registration with used email: " + email);
         List<String> errors = new ArrayList<>();
         errors.add(SERVER_ERROR);
         request.setAttribute(ERRORS, errors);
     }
 
-    private void processSuccessfulLogin(){
+    private void processSuccessfulLogin() {
         LOGGER.info("USER " + user.getId() + "registered");
         request.getSession().setAttribute(USER_ATTRIBUTE, user);
     }
