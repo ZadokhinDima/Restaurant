@@ -8,12 +8,12 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title><fmt:message key="admin.header.order" bundle="${rb}"/></title>
-    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div class="topnav" id="myTopnav">
-    <a href="/main?query=admin.home.page"><fmt:message key="admin.header.active.orders" bundle="${rb}"/></a>
-    <a href="/main?query=exit"><fmt:message key="client.header.exit" bundle="${rb}"/></a>
+    <a href="/restaurant/admin/home_page"><fmt:message key="admin.header.active.orders" bundle="${rb}"/></a>
+    <a href="/restaurant/exit"><fmt:message key="client.header.exit" bundle="${rb}"/></a>
 </div>
 
 <c:if test="${not empty requestScope.message}">
@@ -41,9 +41,11 @@
     </div>
 </c:forEach>
 <div class="information-box">
-    <form action="/main">
-        <button class="button-green" name="query" value="admin.accept"><fmt:message key="order.accept" bundle="${rb}"/></button>
-        <button class="button-red" name="query" value="admin.decline"><fmt:message key="order.decline" bundle="${rb}" /></button>
+    <form action="/restaurant/admin/accept_order">
+        <button class="button-green"><fmt:message key="order.accept" bundle="${rb}"/></button>
+    </form>
+    <form action="/restaurant/admin/decline_order">
+        <button class="button-red"><fmt:message key="order.decline" bundle="${rb}" /></button>
     </form>
 </div>
 </body>

@@ -1,6 +1,7 @@
 package controller.commands.admin;
 
 import controller.commands.Command;
+import controller.commands.CommandFactory;
 import model.entities.Order;
 import model.entities.User;
 import model.exeptions.ConcurrentProcessingException;
@@ -16,7 +17,7 @@ public class AdminDeclineOrderCommand implements Command {
     private Order order;
     private User admin;
 
-    private static final String REDIRECT_PAGE = "redirect:admin.home.page";
+    private static final String REDIRECT_PAGE = "redirect:" + CommandFactory.ADMIN_HOME;
 
     private static final String ATTRIBUTE_CURRENT_ORDER = "currentOrder";
     private static final String ATTRIBUTE_USER = "user";

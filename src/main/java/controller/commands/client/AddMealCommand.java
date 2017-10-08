@@ -1,6 +1,7 @@
 package controller.commands.client;
 
 import controller.commands.Command;
+import controller.commands.CommandFactory;
 import model.entities.Meal;
 import model.entities.User;
 import model.service.MenuService;
@@ -25,7 +26,7 @@ public class AddMealCommand implements Command {
     private static String ATTRIBUTE_ORDER_MEALS = "currentOrder";
     private static String ATTRIBUTE_USER = "user";
 
-    private static String REDIRECT_PAGE = "redirect:search.meals";
+    private static String REDIRECT_PAGE = "redirect:" + CommandFactory.MEALS_SEARCH;
 
     private static final Logger LOGGER = Logger.getLogger(AddMealCommand.class);
 

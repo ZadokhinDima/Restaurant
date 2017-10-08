@@ -8,22 +8,21 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title><fmt:message key="client.header.menu" bundle="${rb}"/></title>
-    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div class="topnav" id="myTopnav">
-    <a href="/main?query=client.home.page"><fmt:message key="client.header.home" bundle="${rb}"/></a>
+    <a href="/restaurant/client/home_page"><fmt:message key="client.header.home" bundle="${rb}"/></a>
     <a class="active" href="#menu"><fmt:message key="client.header.menu" bundle="${rb}"/></a>
-    <a href="/main?query=client.current.order"><fmt:message key="client.header.order" bundle="${rb}"/></a>
-    <a href="/main?query=client.checks.page"><fmt:message key="client.header.checks" bundle="${rb}"/></a>
-    <a href="/main?query=exit"><fmt:message key="client.header.exit" bundle="${rb}"/></a>
+    <a href="/restaurant/client/order"><fmt:message key="client.header.order" bundle="${rb}"/></a>
+    <a href="/restaurant/client/checks"><fmt:message key="client.header.checks" bundle="${rb}"/></a>
+    <a href="/restaurant/exit"><fmt:message key="client.header.exit" bundle="${rb}"/></a>
 </div>
 
 
 
 <div>
-    <form action="/main">
-        <input type="hidden" value="search.meals" name="query">
+    <form action="/restaurant/client/menu">
         <div class="styled-select">
             <fmt:message key="menu.select.category" bundle="${rb}"/>
             <select name="category" >
@@ -43,8 +42,7 @@
 </c:if>
 <c:forEach items="${sessionScope.meals}" var="meal">
     <div class="information-box">
-        <form action="/main" method="post">
-            <input type="hidden" name="query" value="add.meal.to.order">
+        <form action="/restaurant/client/add_meal" method="post">
             <input type="hidden" name="meal" value="${meal.id}">
             <h3><fmt:message key="meal.name" bundle="${rb}"/> : ${meal.name}</h3>
             <p><fmt:message key="meal.price" bundle="${rb}"/> : <ctg:price price="${meal.price}"/> <br>

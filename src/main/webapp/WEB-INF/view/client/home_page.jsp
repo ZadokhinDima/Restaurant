@@ -8,15 +8,15 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title><fmt:message key="client.header.home" bundle="${rb}"/></title>
-    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div class="topnav" id="myTopnav">
-    <a class="active" href="/main?query=client.home.page"><fmt:message key="client.header.home" bundle="${rb}"/></a>
-    <a href="/main?query=search.meals"><fmt:message key="client.header.menu" bundle="${rb}"/></a>
-    <a href="/main?query=client.current.order"><fmt:message key="client.header.order" bundle="${rb}"/></a>
-    <a href="/main?query=client.checks.page"><fmt:message key="client.header.checks" bundle="${rb}"/></a>
-    <a href="/main?query=exit"><fmt:message key="client.header.exit" bundle="${rb}"/></a>
+    <a class="active" href="/restaurant/client/home_page"><fmt:message key="client.header.home" bundle="${rb}"/></a>
+    <a href="/restaurant/client/menu"><fmt:message key="client.header.menu" bundle="${rb}"/></a>
+    <a href="/restaurant/client/order"><fmt:message key="client.header.order" bundle="${rb}"/></a>
+    <a href="/restaurant/client/checks"><fmt:message key="client.header.checks" bundle="${rb}"/></a>
+    <a href="/restaurant/exit"><fmt:message key="client.header.exit" bundle="${rb}"/></a>
 </div>
 
 <div class="information-box">
@@ -77,16 +77,14 @@
                 </c:when>
             </c:choose>
             <br>
-            <form action="/main" method="post" class="button-forms">
+            <form action="/restaurant/client/show_order" method="post" class="button-forms">
                 <input type="hidden" name="order.id" value="${order.id}">
-                <input type="hidden" name="query" value="get.order.items">
                 <button class="button-green">
                     <fmt:message key="button.show" bundle="${rb}"/>
                 </button>
             </form>
             <c:if test="${order.accepted == 0}">
-                <form action="/main" method="post" class="button-forms">
-                    <input type="hidden" name="query" value="client.decline.order">
+                <form action="/restaurant/client/decline_order" method="post" class="button-forms">
                     <input hidden name="order.id" value="${order.id}">
                     <button class="button-red">
                         <fmt:message key="order.decline" bundle="${rb}"/>

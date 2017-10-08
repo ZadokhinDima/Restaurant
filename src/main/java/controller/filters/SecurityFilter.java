@@ -1,5 +1,6 @@
 package controller.filters;
 
+import model.entities.Role;
 import model.entities.User;
 
 import javax.servlet.*;
@@ -10,7 +11,9 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-@WebFilter(urlPatterns = {"/*"})
+import static controller.commands.CommandFactory.*;
+
+@WebFilter(urlPatterns = {"/restaurant/*"})
 public class SecurityFilter implements Filter {
 
     private Set<String> generalQueries = new HashSet<>();
@@ -22,35 +25,32 @@ public class SecurityFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         // general queries
-        generalQueries.add("login");
-        generalQueries.add("registration");
-        generalQueries.add("register.user");
-        generalQueries.add("index");
-        generalQueries.add("set.locale");
+        generalQueries.add(LOGIN_PAGE);
+        generalQueries.add(LOGIN);
+        generalQueries.add(REGISTRATION);
+        generalQueries.add(REGISTER_USER);
+        generalQueries.add(SET_LOCALE);
 
         // subscriber queries
-        clientQueries.addAll(generalQueries);
-        clientQueries.add("get.order.items");
-        clientQueries.add("client.home.page");
-        clientQueries.add("search.meals");
-        clientQueries.add("add.meal.to.order");
-        clientQueries.add("remove.meal.from.order");
-        clientQueries.add("create.order");
-        clientQueries.add("client.current.order");
-        clientQueries.add("exit");
-        clientQueries.add("client.checks.page");
-        clientQueries.add("client.decline.order");
-        clientQueries.add("pay.check");
+        clientQueries.add(GET_ORDER_MEALS);
+        clientQueries.add(CLIENT_HOME);
+        clientQueries.add(MEALS_SEARCH);
+        clientQueries.add(ADD_MEAL_TO_ORDER);
+        clientQueries.add(REMOVE_MEAL_FROM_ORDER);
+        clientQueries.add(CREATE_ORDER);
+        clientQueries.add(CLIENT_ORDER);
+        clientQueries.add(CLIENT_CHECKS);
+        clientQueries.add(CLIENT_DECLINE_ORDER);
+        clientQueries.add(PAY_CHECK);
+        clientQueries.add(EXIT);
 
 
         // admin queries
-        adminQueries.addAll(generalQueries);
-        adminQueries.add("admin.home.page");
-        adminQueries.add("go.to.order");
-        adminQueries.add("admin.accept");
-        adminQueries.add("admin.decline");
-        adminQueries.add("exit");
-
+        adminQueries.add(ADMIN_HOME);
+        adminQueries.add(GO_TO_ORDER);
+        adminQueries.add(ADMIN_ACCEPT_ORDER);
+        adminQueries.add(ADMIN_DECLINE_ORDER);
+        adminQueries.add(EXIT);
 
     }
 
@@ -60,16 +60,14 @@ public class SecurityFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-
-        String query = request.getParameter("query");
-        if (query == null) {
-            query = "index";
-        }
-
+        String query = request.getRequestURI();
         User user = (User) request.getSession().getAttribute("user");
+
         boolean isAllowedGuestAccess =
                 (user == null) &&
                         generalQueries.contains(query);
+
+
         boolean isAllowedSubscriberAccess =
                 (user != null) &&
                         clientQueries.contains(query) &&
@@ -78,13 +76,31 @@ public class SecurityFilter implements Filter {
                 (user != null) &&
                         adminQueries.contains(query) &&
                         "ADMIN".equals(user.getRole().toString());
+
+        boolean isAlreadySignedIn = user != null && generalQueries.contains(query);
+
+        boolean needToSignIn = user == null && (clientQueries.contains(query) || adminQueries.contains(query));
+
         if (isAllowedGuestAccess || isAllowedSubscriberAccess || isAllowedAdminAccess) {
             request.setAttribute("query", query);
-        } else {
-            request.setAttribute("query", "index");
         }
+
+        if(isAlreadySignedIn){
+            if(user.getRole() == Role.CLIENT){
+                request.setAttribute("query", CLIENT_HOME);
+            }
+            else {
+                request.setAttribute("query", ADMIN_HOME);
+            }
+        }
+
+        if(needToSignIn){
+            request.setAttribute("query", LOGIN_PAGE);
+        }
+            
         filterChain.doFilter(request, response);
     }
+
 
     @Override
     public void destroy() {

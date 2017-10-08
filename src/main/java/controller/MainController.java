@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "main", value = "/main")
+@WebServlet(name = "main", value = "/restaurant/*")
 public class MainController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processQuery(request, response);
@@ -26,7 +26,8 @@ public class MainController extends HttpServlet {
         Command command = CommandFactory.create(query);
         String page = command.execute(request, response);
         if (page.startsWith("redirect:")) {
-            response.sendRedirect(page.replace("redirect:", ""));
+            request.setAttribute("query", page.replace("redirect:", ""));
+            processQuery(request, response);
         } else {
             getServletContext().getRequestDispatcher(page).forward(request, response);
         }

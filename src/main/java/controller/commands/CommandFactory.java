@@ -8,34 +8,31 @@ import controller.commands.client.*;
 import controller.commands.outer.*;
 import org.apache.log4j.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class  CommandFactory {
-    private static final String INDEX = "index";
-    private static final String REGISTRATION = "registration";
-    private static final String REGISTER_USER = "register.user";
-    private static final String LOGIN = "login";
-    private static final String SET_LOCALE = "set.locale";
-    private static final String EXIT = "exit";
+    public static final String LOGIN_PAGE = "/restaurant/login_page";
+    public static final String REGISTRATION = "/restaurant/registration";
+    public static final String REGISTER_USER = "/restaurant/registration/register";
+    public static final String LOGIN = "/restaurant/login";
+    public static final String SET_LOCALE = "/restaurant/change_locale";
+    public static final String EXIT = "/restaurant/exit";
 
 
-    private static final String MEALS_SEARCH = "search.meals";
-    private static final String CLIENT_HOME = "client.home.page";
-    private static final String GET_ORDER_MEALS = "get.order.items";
-    private static final String ADD_MEAL_TO_ORDER = "add.meal.to.order";
-    private static final String REMOVE_MEAL_FROM_ORDER = "remove.meal.from.order";
-    private static final String CREATE_ORDER = "create.order";
-    private static final String CLIENT_ORDER = "client.current.order";
-    private static final String CLIENT_DECLINE_ORDER = "client.decline.order";
-    private static final String CLIENT_CHECKS = "client.checks.page";
-    private static final String PAY_CHECK = "pay.check";
+    public static final String MEALS_SEARCH = "/restaurant/client/menu";
+    public static final String CLIENT_HOME = "/restaurant/client/home_page";
+    public static final String GET_ORDER_MEALS = "/restaurant/client/show_order";
+    public static final String ADD_MEAL_TO_ORDER = "/restaurant/client/add_meal";
+    public static final String REMOVE_MEAL_FROM_ORDER = "/restaurant/client/remove_meal";
+    public static final String CREATE_ORDER = "/restaurant/client/create_order";
+    public static final String CLIENT_ORDER = "/restaurant/client/order";
+    public static final String CLIENT_DECLINE_ORDER = "/restaurant/client/decline_order";
+    public static final String CLIENT_CHECKS = "/restaurant/client/checks";
+    public static final String PAY_CHECK = "/restaurant/client/pay";
 
 
-    private static final String ADMIN_HOME = "admin.home.page";
-    private static final String GO_TO_ORDER = "go.to.order";
-    private static final String ADMIN_DECLINE_ORDER = "admin.decline";
-    private static final String ADMIN_ACCEPT_ORDER = "admin.accept";
+    public static final String ADMIN_HOME = "/restaurant/admin/home_page";
+    public static final String GO_TO_ORDER = "/restaurant/admin/order";
+    public static final String ADMIN_DECLINE_ORDER = "/restaurant/admin/decline_order";
+    public static final String ADMIN_ACCEPT_ORDER = "/restaurant/admin/accept_order";
 
 
 
@@ -45,7 +42,7 @@ public class  CommandFactory {
     public static Command create(String query){
 
         if(query == null){
-            query = INDEX;
+            query = LOGIN_PAGE;
         }
 
         LOGGER.info("Creating command for query: " + query);
@@ -57,8 +54,8 @@ public class  CommandFactory {
                 return new RegistrationCommand();
             case LOGIN :
                 return new LoginCommand();
-            case INDEX :
-                return new IndexCommand();
+            case LOGIN_PAGE :
+                return new LoginPageCommand();
             case CLIENT_HOME:
                 return new ClientHomeCommand();
             case MEALS_SEARCH:

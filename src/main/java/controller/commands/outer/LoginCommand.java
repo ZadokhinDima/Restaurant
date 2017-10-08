@@ -40,7 +40,7 @@ public class LoginCommand implements Command {
 
         if(!validateEmail()){
             request.setAttribute(ERROR_ATTRIBUTE, "errors.email");
-            return INDEX_JSP;
+            return SIGN_IN_JSP;
         }
 
         Optional<User> user = service.logIn(email, password);
@@ -48,16 +48,16 @@ public class LoginCommand implements Command {
             LOGGER.info("User " + user.get().getId() + " logged in.");
             request.getSession().setAttribute(USER_ATTRIBUTE, user.get());
             if(user.get().getRole().equals(Role.ADMIN)){
-                return "redirect:client.home.page";
+                return "redirect:" + CommandFactory.ADMIN_HOME;
             }
             else{
-                return "redirect:admin.home.page";
+                return "redirect:" + CommandFactory.CLIENT_HOME;
             }
         }
         else{
             LOGGER.info("Invalid attempt to log in.");
             request.setAttribute(ERROR_ATTRIBUTE, "errors.login");
-            return INDEX_JSP;
+            return SIGN_IN_JSP;
         }
     }
 

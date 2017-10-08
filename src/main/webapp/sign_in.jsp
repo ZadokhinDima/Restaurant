@@ -7,13 +7,12 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Login page</title>
-    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body class="login-page">
 <div class="box">
     <div class="form" id="main">
-        <form class="login-form" action="/main" method="post">
-            <input type="hidden" name="query" value="login"/>
+        <form class="login-form" action="/restaurant/login" method="post">
             <input pattern="[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*"
                    title="<fmt:message key="errors.email" bundle="${rb}"/>"
                    placeholder="<fmt:message key="login.email" bundle="${rb}"/>" name="email"/>
@@ -25,19 +24,16 @@
 
             <button class="my-button"><fmt:message key="login.login" bundle="${rb}"/></button>
             <p class="message"><fmt:message key="login.notregistered" bundle="${rb}"/>
-                <a href="/main?query=registration"><fmt:message key="login.register" bundle="${rb}"/></a></p>
+                <a href="/restaurant/registration"><fmt:message key="login.register" bundle="${rb}"/></a></p>
         </form>
     </div>
 
 </div>
 <div class="language-box">
-    <form class="language-form" action="/main">
-        <input type="hidden" name="query" value="set.locale"/>
-        <input type="hidden" name="page" value="index.jsp"/>
+    <form class="language-form" action="/restaurant/change_locale">
+        <input type="hidden" name="page" value="/sign_in.jsp"/>
         <input id="ua" type="submit" name="language" value="UA"/>
         <input id="en" type="submit" name="language" value="EN"/>
     </form>
 </div>
 </body>
-
-</html>

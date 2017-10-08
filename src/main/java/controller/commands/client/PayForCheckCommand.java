@@ -1,6 +1,7 @@
 package controller.commands.client;
 
 import controller.commands.Command;
+import controller.commands.CommandFactory;
 import model.entities.User;
 import model.exeptions.ConcurrentProcessingException;
 import model.service.CheckService;
@@ -16,7 +17,7 @@ public class PayForCheckCommand implements Command {
     private static final String ATTRIBUTE_MESSAGE = "message";
     private static final String ATTRIBUTE_USER = "user";
 
-    private static final String REDIRECT_PAGE = "redirect:client.checks.page";
+    private static final String REDIRECT_PAGE = "redirect:" + CommandFactory.CLIENT_CHECKS;
 
     private static final Logger LOGGER = Logger.getLogger(PayForCheckCommand.class);
 

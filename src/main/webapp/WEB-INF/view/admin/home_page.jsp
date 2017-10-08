@@ -9,12 +9,12 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title><fmt:message key="admin.header.active.orders" bundle="${rb}"/></title>
-    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div class="topnav" id="myTopnav">
-    <a class="active" href="#home"><fmt:message key="admin.header.active.orders" bundle="${rb}"/></a>
-    <a href="/main?query=exit"><fmt:message key="client.header.exit" bundle="${rb}"/></a>
+    <a class="active" href="#"><fmt:message key="admin.header.active.orders" bundle="${rb}"/></a>
+    <a href="/restaurant/exit"><fmt:message key="client.header.exit" bundle="${rb}"/></a>
 </div>
 
 <c:if test="${not empty requestScope.message}">
@@ -31,9 +31,8 @@
         <br>
         <br>
         <br>
-        <form action="/main" method="post">
+        <form action="/restaurant/admin/order" method="post">
             <input type="hidden" name="order.id" value="${order.id}">
-            <input type="hidden" name="query" value="go.to.order">
             <button class="button-green">
                 <fmt:message key="admin.goto.order" bundle="${rb}"/>
             </button>

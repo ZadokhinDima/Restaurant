@@ -1,6 +1,7 @@
 package controller.commands.client;
 
 import controller.commands.Command;
+import controller.commands.CommandFactory;
 import model.entities.User;
 import model.exeptions.ConcurrentProcessingException;
 import model.service.CheckService;
@@ -25,7 +26,7 @@ public class ClientDeclineOrderCommand implements Command {
     private static final String ATTRIBUTE_USER = "user";
     private static final String ATTRIBUTE_MESSAGE = "message";
 
-    private static final String REDIRECT_PAGE = "redirect:client.home.page";
+    private static final String REDIRECT_PAGE = "redirect:" + CommandFactory.CLIENT_HOME;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {

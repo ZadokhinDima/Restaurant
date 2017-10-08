@@ -1,6 +1,7 @@
 package controller.commands.client;
 
 import controller.commands.Command;
+import controller.commands.CommandFactory;
 import model.entities.Meal;
 import model.entities.User;
 import model.service.OrderService;
@@ -16,7 +17,7 @@ public class CreateOrderCommand implements Command {
     private static final String ATTRIBUTE_USER = "user";
     private static final String ATTRIBUTE_CURRENT_ORDER_MEALS = "currentOrder";
 
-    private static final String REDIRECT_PAGE = "redirect:client.home.page";
+    private static final String REDIRECT_PAGE = "redirect:" + CommandFactory.CLIENT_HOME;
 
     private User client;
     private List<Meal> meals;

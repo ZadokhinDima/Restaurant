@@ -1,6 +1,7 @@
 package controller.commands.admin;
 
 import controller.commands.Command;
+import controller.commands.CommandFactory;
 import model.entities.Order;
 import model.entities.User;
 import model.exeptions.ConcurrentProcessingException;
@@ -21,7 +22,7 @@ public class AcceptOrderCommand implements Command {
     private static final String ATTRIBUTE_USER = "user";
     private static final String ATTRIBUTE_MESSAGE = "message";
 
-    private static final String REDIRECT_PAGE = "redirect:admin.home.page";
+    private static final String REDIRECT_PAGE = "redirect:" + CommandFactory.ADMIN_HOME;
 
     private CheckService checkService = CheckServiceImpl.getInstance();
 

@@ -19,6 +19,6 @@ public class ExitCommand implements Command {
                 request.getSession().setAttribute(attribute, null);
             }
         }
-        return INDEX_JSP;
+        return SIGN_IN_JSP;
     }
 }

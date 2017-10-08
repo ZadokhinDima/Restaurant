@@ -1,6 +1,7 @@
 package controller.commands.outer;
 
 import controller.commands.Command;
+import controller.commands.CommandFactory;
 import controller.util.PasswordSecurityUtil;
 import model.entities.*;
 import model.exeptions.EmailExistsException;
@@ -79,7 +80,7 @@ public class RegisterUserCommand implements Command {
         try {
             service.registerUser(login, user);
             processSuccessfulLogin();
-            return CLIENT_PAGE_JSP;
+            return "redirect:" + CommandFactory.CLIENT_HOME;
         } catch (EmailExistsException e) {
             processExistingEmail();
             return REGISTRATION_JSP;
