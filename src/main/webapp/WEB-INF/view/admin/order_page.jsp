@@ -41,10 +41,10 @@
     </div>
 </c:forEach>
 <div class="information-box">
-    <form action="/restaurant/admin/accept_order">
+    <form action="/restaurant/admin/accept_order" class="button-forms">
         <button class="button-green"><fmt:message key="order.accept" bundle="${rb}"/></button>
     </form>
-    <form action="/restaurant/admin/decline_order">
+    <form action="/restaurant/admin/decline_order" class = "button-forms">
         <button class="button-red"><fmt:message key="order.decline" bundle="${rb}" /></button>
     </form>
 </div>
