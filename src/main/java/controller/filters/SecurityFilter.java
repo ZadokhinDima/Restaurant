@@ -97,7 +97,6 @@ public class SecurityFilter implements Filter {
         if(needToSignIn){
             request.setAttribute("query", LOGIN_PAGE);
         }
-            
         filterChain.doFilter(request, response);
     }
 

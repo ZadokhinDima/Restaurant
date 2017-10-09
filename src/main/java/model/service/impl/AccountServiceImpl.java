@@ -1,9 +1,9 @@
 package model.service.impl;
 
+import model.dao.ConnectionDAO;
 import model.dao.FactoryDAO;
 import model.dao.LoginDAO;
 import model.dao.UserDAO;
-import model.dao.impl.mysql.DbManager;
 import model.dao.impl.mysql.MySQLFactory;
 import model.entities.Login;
 import model.entities.User;
@@ -18,10 +18,10 @@ import java.util.Optional;
 
 public class AccountServiceImpl implements AccountService {
 
-    private static final Logger LOGGER = Logger.getLogger(AccountServiceImpl.class);
+    private FactoryDAO factory;
 
     private AccountServiceImpl() {
-
+        factory = FactoryDAO.getInstance();
     }
 
     private static class Holder {
@@ -34,47 +34,33 @@ public class AccountServiceImpl implements AccountService {
 
 
     public Optional<User> logIn(String email, String password) {
-        MySQLFactory factory = (MySQLFactory) FactoryDAO.getInstance();
-        Connection connection = DbManager.getConnection();
-        factory.setConnection(connection);
-        LoginDAO loginDAO = factory.getLoginDAO();
+        ConnectionDAO connectionDAO = factory.getConnectionDAO();
+        LoginDAO loginDAO = factory.getLoginDAO(connectionDAO);
         Optional<Login> login = loginDAO.findAccount(email, password);
         if (login.isPresent()) {
-            UserDAO userDAO = factory.getUserDAO();
+            UserDAO userDAO = factory.getUserDAO(connectionDAO);
             Optional<User> result = userDAO.getUserByAccount(login.get());
-            DbManager.putConnection(connection);
+            connectionDAO.close();
             return result;
         }
-        DbManager.putConnection(connection);
+        connectionDAO.close();
         return Optional.empty();
     }
 
 
     public void registerUser(Login login, User user) throws EmailExistsException {
-        MySQLFactory factory = (MySQLFactory) FactoryDAO.getInstance();
-        Connection connection = DbManager.getConnection();
-        try {
-            connection.setAutoCommit(false);
-            factory.setConnection(connection);
-            LoginDAO loginDAO = factory.getLoginDAO();
+        try(ConnectionDAO connectionDAO = factory.getConnectionDAO()) {
+            connectionDAO.beginTransaction();
+            LoginDAO loginDAO = factory.getLoginDAO(connectionDAO);
             if (loginDAO.insert(login)) {
                 user.setId(login.getId());
-                UserDAO userDAO = factory.getUserDAO();
+                UserDAO userDAO = factory.getUserDAO(connectionDAO);
                 if (userDAO.insert(user)) {
-                    connection.commit();
+                    connectionDAO.commitTransaction();
                 } else {
-                    connection.rollback();
+                    connectionDAO.rollbackTransaction();
                 }
             }
-        } catch (SQLIntegrityConstraintViolationException e) {
-            LOGGER.error(e);
-            throw new EmailExistsException();
-        } catch (SQLException e){
-            LOGGER.error(e);
-        }
-
-        finally {
-            DbManager.putConnection(connection);
         }
     }
 }

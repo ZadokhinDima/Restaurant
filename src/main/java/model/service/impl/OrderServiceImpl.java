@@ -2,7 +2,6 @@ package model.service.impl;
 
 
 import model.dao.*;
-import model.dao.impl.mysql.DbManager;
 import model.dao.impl.mysql.MySQLFactory;
 import model.entities.*;
 import model.service.OrderService;
@@ -19,10 +18,11 @@ import java.util.stream.Collectors;
 
 public class OrderServiceImpl implements OrderService{
 
+    private FactoryDAO factory;
     private static final Logger LOGGER = Logger.getLogger(OrderServiceImpl.class);
 
     private OrderServiceImpl(){
-
+        factory = FactoryDAO.getInstance();
     }
 
     private static class Holder{
@@ -36,37 +36,33 @@ public class OrderServiceImpl implements OrderService{
 
 
     public List<Order> ordersOfUser(User user){
-        Connection connection = DbManager.getConnection();
-        MySQLFactory factory = (MySQLFactory) FactoryDAO.getInstance();
-        factory.setConnection(connection);
-        OrderDAO dao = factory.getOrderDAO();
+        ConnectionDAO connectionDAO = factory.getConnectionDAO();
+        OrderDAO dao = factory.getOrderDAO(connectionDAO);
         List<Order> result = dao.getForUser(user);
-        DbManager.putConnection(connection);
+        connectionDAO.close();
         return result;
     }
 
     public List<Meal> getOrderMeals(int orderId){
-        Connection connection = DbManager.getConnection();
-        MySQLFactory factory = (MySQLFactory) FactoryDAO.getInstance();
-        factory.setConnection(connection);
-        OrderDAO orderDAO = factory.getOrderDAO();
+        ConnectionDAO connectionDAO = factory.getConnectionDAO();
+        OrderDAO orderDAO = factory.getOrderDAO(connectionDAO);
         Optional<Order> order = orderDAO.getForId(orderId);
         if(order.isPresent()){
-            MealsDAO mealsDAO = factory.getMealsDAO();
+            MealsDAO mealsDAO = factory.getMealsDAO(connectionDAO);
             List<Meal> result =  mealsDAO.getFromOrder(order.get());
-            loadCategories(result, factory);
-            DbManager.putConnection(connection);
+            loadCategories(result, connectionDAO);
+            connectionDAO.close();
             return result;
         }
         else{
             LOGGER.error("Attempt to get non-existent order");
-            DbManager.putConnection(connection);
+            connectionDAO.close();
             throw new RuntimeException();
         }
     }
 
-    private void loadCategories(List<Meal> meals, FactoryDAO factory){
-        CategoryDAO categoryDAO = factory.getCategoryDAO();
+    private void loadCategories(List<Meal> meals, ConnectionDAO connectionDAO){
+        CategoryDAO categoryDAO = factory.getCategoryDAO(connectionDAO);
         for(Meal meal : meals){
             if(meal.getCategory() == null){
                 meal.setCategory(categoryDAO.getForId(meal.getCategoryId()).get());
@@ -80,12 +76,11 @@ public class OrderServiceImpl implements OrderService{
                 .setMeals(meals)
                 .createOrder();
 
-        MySQLFactory factory = (MySQLFactory) FactoryDAO.getInstance();
-        Connection connection = DbManager.getConnection();
-        factory.setConnection(connection);
-        OrderDAO dao = factory.getOrderDAO();
-        dao.insert(toCreate);
-        DbManager.putConnection(connection);
+
+        ConnectionDAO connectionDAO = factory.getConnectionDAO();
+        OrderDAO orderDAO = factory.getOrderDAO(connectionDAO);
+        orderDAO.insert(toCreate);
+        connectionDAO.close();
         return toCreate.getId();
     }
 
@@ -103,42 +98,36 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public boolean checkClientRightsOnOrder(int orderId, User client) {
-        Connection connection = DbManager.getConnection();
-        MySQLFactory factory = (MySQLFactory) FactoryDAO.getInstance();
-        factory.setConnection(connection);
-        OrderDAO orderDAO = factory.getOrderDAO();
+        ConnectionDAO connectionDAO = factory.getConnectionDAO();
+        OrderDAO orderDAO = factory.getOrderDAO(connectionDAO);
         Order order = orderDAO.getForId(orderId).get();
-        DbManager.putConnection(connection);
+        connectionDAO.close();
         return order.getClientId() == client.getId();
     }
 
     @Override
     public Order getFullInfoAboutOrder(int orderId) {
-        Connection connection = DbManager.getConnection();
-        MySQLFactory factory = (MySQLFactory) FactoryDAO.getInstance();
-        factory.setConnection(connection);
-        OrderDAO orderDAO = factory.getOrderDAO();
+        ConnectionDAO connectionDAO = factory.getConnectionDAO();
+        OrderDAO orderDAO = factory.getOrderDAO(connectionDAO);
         Order result = orderDAO.getForId(orderId).get();
-        UserDAO userDAO = factory.getUserDAO();
+        UserDAO userDAO = factory.getUserDAO(connectionDAO);
         User client = userDAO.getForId(result.getClientId()).get();
         result.setClient(client);
         result.setMeals(getOrderMeals(result.getId()));
-        DbManager.putConnection(connection);
+        connectionDAO.close();
         return result;
     }
 
     @Override
     public List<Order> getActiveOrders() {
-        Connection connection = DbManager.getConnection();
-        MySQLFactory factory = (MySQLFactory) FactoryDAO.getInstance();
-        factory.setConnection(connection);
-        OrderDAO orderDAO = factory.getOrderDAO();
+        ConnectionDAO connectionDAO = factory.getConnectionDAO();
+        OrderDAO orderDAO = factory.getOrderDAO(connectionDAO);
 
         List<Order> result = orderDAO.getAll().stream()
                 .filter(order -> order.getAccepted()==0)
                 .collect(Collectors.toList());
 
-        DbManager.putConnection(connection);
+        connectionDAO.close();
         return result;
     }
 }

@@ -1,10 +1,6 @@
 package model.service.impl;
 
-import model.dao.CheckDAO;
-import model.dao.FactoryDAO;
-import model.dao.OrderDAO;
-import model.dao.UserDAO;
-import model.dao.impl.mysql.DbManager;
+import model.dao.*;
 import model.dao.impl.mysql.MySQLFactory;
 import model.entities.*;
 import model.exeptions.ConcurrentProcessingException;
@@ -18,10 +14,11 @@ import java.util.List;
 
 public class CheckServiceImpl implements CheckService{
 
+    private FactoryDAO factory;
     private static final Logger LOGGER = Logger.getLogger(CheckServiceImpl.class);
 
     private CheckServiceImpl(){
-
+        factory = FactoryDAO.getInstance();
     }
 
     private static class Holder {
@@ -37,19 +34,17 @@ public class CheckServiceImpl implements CheckService{
 
     @Override
     public List<Check> getChecks(User client){
-        Connection connection = DbManager.getConnection();
-        MySQLFactory factory = (MySQLFactory) FactoryDAO.getInstance();
-        factory.setConnection(connection);
-        CheckDAO checkDAO = factory.getCheckDAO();
+        ConnectionDAO connectionDAO = factory.getConnectionDAO();
+        CheckDAO checkDAO = factory.getCheckDAO(connectionDAO);
         List<Check> result = checkDAO.getAllChecksForUser(client);
-        loadOrdersIntoChecks(result, factory);
-        loadAdminsIntoChecks(result, factory);
-        DbManager.putConnection(connection);
+        loadOrdersIntoChecks(result, connectionDAO);
+        loadAdminsIntoChecks(result, connectionDAO);
+        connectionDAO.close();
         return result;
     }
 
-    private void loadOrdersIntoChecks(List<Check> checks, FactoryDAO factoryDAO){
-        OrderDAO orderDAO = factoryDAO.getOrderDAO();
+    private void loadOrdersIntoChecks(List<Check> checks, ConnectionDAO connectionDAO){
+        OrderDAO orderDAO = factory.getOrderDAO(connectionDAO);
         for(Check check : checks){
             if(check.getOrder() == null){
                 check.setOrder(orderDAO.getForId(check.getOrderId()).get());
@@ -57,8 +52,8 @@ public class CheckServiceImpl implements CheckService{
         }
     }
 
-    private void loadAdminsIntoChecks(List<Check> checks, FactoryDAO factoryDAO){
-        UserDAO userDAO = factoryDAO.getUserDAO();
+    private void loadAdminsIntoChecks(List<Check> checks, ConnectionDAO connectionDAO){
+        UserDAO userDAO = factory.getUserDAO(connectionDAO);
         for(Check check : checks){
             if(check.getAdmin() == null){
                 check.setAdmin(userDAO.getForId(check.getAdminId()).get());
@@ -67,35 +62,29 @@ public class CheckServiceImpl implements CheckService{
     }
     @Override
     public void payCheck(int checkId){
-        try(Connection connection = DbManager.getConnection()){
-            connection.setAutoCommit(false);
-            MySQLFactory factory = (MySQLFactory) FactoryDAO.getInstance();
-            factory.setConnection(connection);
-            CheckDAO checkDAO = factory.getCheckDAO();
+        try(ConnectionDAO connectionDAO = factory.getConnectionDAO()){
+            connectionDAO.beginTransaction();
+            CheckDAO checkDAO = factory.getCheckDAO(connectionDAO);
             Check check = checkDAO.getForId(checkId).get();
             if(check.getPaid() == null){
                 check.pay();
                 checkDAO.update(check);
-                connection.commit();
+                connectionDAO.commitTransaction();
             }
             else {
                 throw new ConcurrentProcessingException("concurrent.check");
             }
-        }
-        catch (SQLException e){
-            LOGGER.error(e);
-            throw new RuntimeException(e);
         }
     }
 
 
     @Override
     public Check acceptOrder(Order order, User admin){
-        try(Connection connection = DbManager.getConnection()) {
-            connection.setAutoCommit(false);
-            MySQLFactory factory = (MySQLFactory) FactoryDAO.getInstance();
-            factory.setConnection(connection);
-            OrderDAO orderDAO = factory.getOrderDAO();
+        try(ConnectionDAO connectionDAO = factory.getConnectionDAO()) {
+            connectionDAO.beginTransaction();
+            OrderDAO orderDAO = factory.getOrderDAO(connectionDAO);
+
+
             order = orderDAO.getForId(order.getId()).get();
             if(order.getAccepted() == 0) {
                 order.setAccepted(1);
@@ -114,45 +103,36 @@ public class CheckServiceImpl implements CheckService{
                     .setPrice(price)
                     .createCheck();
 
-            CheckDAO checkDAO = factory.getCheckDAO();
+            CheckDAO checkDAO = factory.getCheckDAO(connectionDAO);
+
             if(!checkDAO.insert(check)){
-                connection.rollback();
+                connectionDAO.rollbackTransaction();
                 return null;
             }
             else {
-                connection.commit();
+                connectionDAO.commitTransaction();
                 return check;
             }
-        }
-        catch (SQLException e){
-            LOGGER.error(e);
-            throw new RuntimeException(e);
         }
     }
 
 
     @Override
     public void declineOrder(int orderId){
-        try(Connection connection = DbManager.getConnection()){
-            connection.setAutoCommit(false);
-            MySQLFactory factory = (MySQLFactory) FactoryDAO.getInstance();
-            factory.setConnection(connection);
-            OrderDAO orderDAO = factory.getOrderDAO();
+        try(ConnectionDAO connectionDAO = factory.getConnectionDAO()){
+            connectionDAO.beginTransaction();
+            OrderDAO orderDAO = factory.getOrderDAO(connectionDAO);
             Order order = orderDAO.getForId(orderId).get();
             if(order.getAccepted() == 0) {
                 order.setAccepted(-1);
                 if(orderDAO.update(order) == 1){
-                    connection.commit();
+                    connectionDAO.commitTransaction();
                 }
                 else throw new RuntimeException();
             }
             else {
                 throw new ConcurrentProcessingException("concurrent.order");
             }
-        }
-        catch (SQLException e){
-            LOGGER.error(e);
-            throw new RuntimeException(e);
         }
     }
 
